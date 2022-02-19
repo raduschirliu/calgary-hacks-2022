@@ -1,21 +1,49 @@
 import React from 'react';
+import ITask from '../models/Task';
+import IUser from '../models/User';
+import Leaderboard from './Leaderboard';
+import Taskboard from './Taskboard';
+
+const sampleUsers: IUser[] = [
+  {
+    name: 'Alexa',
+    score: 100,
+  },
+  {
+    name: 'Radu',
+    score: 150,
+  },
+  {
+    name: 'Tyler',
+    score: 300,
+  },
+  {
+    name: 'Jordan',
+    score: 20,
+  },
+];
+
+const sampleTasks: ITask[] = [
+  {
+    name: 'The first task!',
+    usersCompleted: ['Jordan'],
+  },
+  {
+    name: 'The second task!',
+    usersCompleted: ['Alexa', 'Radu'],
+  },
+  {
+    name: 'The third task!',
+    usersCompleted: ['Tyler'],
+  },
+];
 
 function App() {
   return (
-    <div className="bg-gray-900 p-20 h-screen flex justify-center items-start flex-col">
-      <h1 className="text-5xl text-white">Hello Tailwind 👋</h1>
-      <p className="text-gray-400 mt-5 text-lg">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit
-        consequuntur odio aut nobis ab quis? Reiciendis doloremque ut quo fugiat
-        eveniet tempora, atque alias earum ullam inventore itaque sapiente iste?
-      </p>
-      <button
-        onClick={() => console.log('Hello World')}
-        className="p-4 bg-lime-600 rounded-lg font-bold text-white mt-5 hover:bg-gray-600"
-      >
-        Hello Friends 🚀
-      </button>
-    </div>
+    <>
+      <Leaderboard users={sampleUsers} />
+      <Taskboard tasks={sampleTasks} />
+    </>
   );
 }
 
