@@ -6,8 +6,8 @@ from flask_cors import CORS, cross_origin
 # Load environment variables
 load_dotenv()
 
-from src import util
-util.example()
+from src import db
+db.create_tables()
 
 # Setup Flask and variables
 port = int(os.getenv('PORT', 8000))
