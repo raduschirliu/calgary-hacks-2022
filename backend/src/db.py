@@ -19,7 +19,7 @@ def create_tables():
     create_workspace_user_table()
     create_task_table()
     create_user_task_table()
-    workspace_stat_table()
+    create_workspace_stat_table()
 
 ## functions for creating database tables
 
