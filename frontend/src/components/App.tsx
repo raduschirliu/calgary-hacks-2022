@@ -1,5 +1,4 @@
-import React from "react";
-import "./App.css";
+import React from 'react';
 
 function App() {
   return (
@@ -11,7 +10,7 @@ function App() {
         eveniet tempora, atque alias earum ullam inventore itaque sapiente iste?
       </p>
       <button
-        onClick={() => console.log("Hello World")}
+        onClick={() => console.log('Hello World')}
         className="p-4 bg-lime-600 rounded-lg font-bold text-white mt-5 hover:bg-gray-600"
       >
         Hello Friends 🚀
