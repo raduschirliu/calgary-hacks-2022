@@ -79,10 +79,11 @@ def create_task_table():
 def create_workspace_user_table():
     sql = """
     CREATE TABLE IF NOT EXISTS workspace_user(
-    workspace_id varchar(255) NOT NULL,
-    user_id varchar(255) NOT NULL ,
-    score varchar(255) NOT NULL,
-    PRIMARY KEY(workspace_id, user_id)
+        workspace_id varchar(255) NOT NULL,
+        user_id varchar(255) NOT NULL,
+        score varchar(255) NOT NULL,
+
+        PRIMARY KEY(workspace_id, user_id)
     );
     """
     try:
@@ -95,10 +96,11 @@ def create_workspace_user_table():
 def create_user_task_table():
     sql = """
     CREATE TABLE IF NOT EXISTS user_task(
-    user_id varchar(255) NOT NULL ,
-    task_id varchar(255) NOT NULL,
-    timestamp timestamp without time zone NOT NULL,
-    PRIMARY KEY(task_id, user_id)
+        user_id varchar(255) NOT NULL ,
+        task_id varchar(255) NOT NULL,
+        timestamp timestamp without time zone NOT NULL,
+        
+        PRIMARY KEY(task_id, user_id)
     );
     """
     try:
@@ -111,10 +113,11 @@ def create_user_task_table():
 def create_workspace_stat_table():
     sql = """
     CREATE TABLE IF NOT EXISTS workspace_stat(
-    workspace_id varchar(255) NOT NULL,
-    current_streak_user_id varchar(255) NOT NULL ,
-    current_streak varchar(255) NOT NULL,
-    PRIMARY KEY(workspace_id, current_streak_user_id),
+        workspace_id varchar(255) NOT NULL,
+        current_streak_user_id varchar(255) NOT NULL ,
+        current_streak varchar(255) NOT NULL,
+
+        PRIMARY KEY(workspace_id, current_streak_user_id)
     );
     """
     try:
