@@ -2,6 +2,7 @@ import os
 import psycopg2
 import uuid
 import datetime
+import threading
 
 # global variable of database url
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -14,12 +15,15 @@ cursor = conn.cursor()
 # single database table creation function
 
 def create_tables():
-    create_user_table()
-    create_workspace_table()
-    create_workspace_user_table()
-    create_task_table()
-    create_user_task_table()
-    create_workspace_stat_table()
+    lock = threading.Lock()
+
+    with lock:
+        create_user_table()
+        create_workspace_table()
+        create_workspace_user_table()
+        create_task_table()
+        create_user_task_table()
+        create_workspace_stat_table()
 
 # functions for creating database tables
 
