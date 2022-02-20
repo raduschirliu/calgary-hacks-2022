@@ -7,7 +7,7 @@ interface IUiContext {
 
 export const UiContext = React.createContext<IUiContext>(null as any);
 
-export default function UiProvider({ children }: { children: any }) {
+export default function UiProvider({ children } : any) {
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [snackbarConfig, setSnackbarConfig] = useState<SnackbarProps>({});
 

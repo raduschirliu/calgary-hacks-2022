@@ -67,7 +67,10 @@ export default function WorkspaceProvider({ children }: { children: any }) {
       .then((res) => {
         setWorkspaces((cur: IWorkspacePreview[]) => [
           ...cur,
-          res.data as IWorkspacePreview,
+          {
+            name,
+            id: res.data as string,
+          },
         ]);
       })
       .catch(console.error);
@@ -77,8 +80,10 @@ export default function WorkspaceProvider({ children }: { children: any }) {
   const changeCurrentWorkspace = (id: string) => {
     // First we need to get the new workspace's name.
     const newWorkspace = workspaces.find((w) => w.id === id);
+
     if (!newWorkspace) {
       // If this fails, we should abort the operation entirely.
+      console.log('Selected workspace invalid?');
       return;
     }
 
@@ -93,28 +98,28 @@ export default function WorkspaceProvider({ children }: { children: any }) {
     axios
       .get(`${API_URL}/workspace/${id}/users`, getHeaders())
       .then((res) => {
-        if (!currentWorkspace) {
-          return;
-        }
-
-        setCurrentWorkspace({
-          ...currentWorkspace,
-          users: res.data as IUser[],
-        });
+        setCurrentWorkspace((prev: IWorkspace | null) =>
+          prev
+            ? {
+                ...prev,
+                users: res.data as IUser[],
+              }
+            : prev
+        );
       })
       .catch(console.error);
 
     axios
       .get(`${API_URL}/workspace/${id}/tasks`, getHeaders())
       .then((res) => {
-        if (!currentWorkspace) {
-          return;
-        }
-
-        setCurrentWorkspace({
-          ...currentWorkspace,
-          tasks: res.data as ITask[],
-        });
+        setCurrentWorkspace((prev: IWorkspace | null) =>
+          prev
+            ? {
+                ...prev,
+                tasks: res.data as ITask[],
+              }
+            : prev
+        );
       })
       .catch(console.error);
   };
