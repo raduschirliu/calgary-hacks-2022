@@ -8,9 +8,9 @@ const DashboardPage = () => {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row mb-4">
-        <div className="flex-1 flex flex-row ">
-          <p className="font-['Permanent_Marker']">Homework Homies</p>
-          <img src={HorizontalPeter} alt="Logo" className="h-12" />
+        <div className="flex-1 flex flex-row">
+          <img src={HorizontalPeter} alt="Logo" className="h-12"/>
+          <p className="font-['Permanent_Marker'] ml-5 mt-2">Homework Homies</p>
         </div>
         <Header />
       </div>
