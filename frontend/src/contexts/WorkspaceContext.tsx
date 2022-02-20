@@ -1,13 +1,12 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ITask from '../models/Task';
 import { IWorkspace, IWorkspacePreview } from '../models/Workspace';
 
 interface IWorkspaceContext {
   currentWorkspace: IWorkspace | null;
   workspaces: IWorkspacePreview[];
-  isLoading: boolean;
 
   // Maybe return a success status promise instead of void?
   createWorkspace: (name: string) => void;
@@ -35,7 +34,6 @@ export default function WorkspaceProvider({ children }: { children: any }) {
     null
   );
   const [workspaces, setWorkspaces] = useState<IWorkspacePreview[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getHeaders = useCallback(() => {
     return { headers: { Authorization: `Bearer ${authToken}` } };
@@ -47,23 +45,16 @@ export default function WorkspaceProvider({ children }: { children: any }) {
 
   // Update the list of workspace previews
   const updateWorkspaceList = useCallback(() => {
-    if (isLoading) return;
-    setIsLoading(true);
-
     axios
       .get(`${API_URL}/workspace`, getHeaders())
       .then((res) => {
         setWorkspaces(res.data as IWorkspacePreview[]);
       })
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
-  }, [isLoading, setWorkspaces, getHeaders]);
+      .catch(console.error);
+  }, [setWorkspaces, getHeaders]);
 
   // Create a new workspace
   const createWorkspace = (name: string) => {
-    if (isLoading) return;
-    setIsLoading(true);
-
     axios
       .post(
         `${API_URL}/workspace`,
@@ -78,22 +69,17 @@ export default function WorkspaceProvider({ children }: { children: any }) {
           res.data as IWorkspacePreview,
         ]);
       })
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
+      .catch(console.error);
   };
 
   // Change the current workspace and load the new one
   const changeCurrentWorkspace = (id: string) => {
-    if (isLoading) return;
-    setIsLoading(true);
-
     axios
       .get(`${API_URL}/workspace/${id}`, getHeaders())
       .then((res) => {
         setCurrentWorkspace(res.data as IWorkspace);
       })
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
+      .catch(console.error);
   };
 
   // Invite a user to our current workspace (if valid)
@@ -112,6 +98,7 @@ export default function WorkspaceProvider({ children }: { children: any }) {
   // Fetch workspaces on initial load
   useEffect(() => {
     if (authToken.length === 0) return;
+    console.log('update workspace list');
     updateWorkspaceList();
   }, [authToken, updateWorkspaceList]);
 
@@ -134,7 +121,6 @@ export default function WorkspaceProvider({ children }: { children: any }) {
       value={{
         currentWorkspace,
         workspaces,
-        isLoading,
         createWorkspace,
         changeCurrentWorkspace,
         inviteToWorkspace,
