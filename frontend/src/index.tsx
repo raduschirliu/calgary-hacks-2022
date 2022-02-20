@@ -5,6 +5,8 @@ import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
+import WorkspaceProvider from './contexts/WorkspaceContext';
+import UiProvider from './contexts/UiContext';
 
 const AUTH0_DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN || '';
 const AUTH0_CLIENT_ID = process.env.REACT_APP_AUTH0_CLIENT_ID || '';
@@ -19,9 +21,13 @@ ReactDOM.render(
       audience={AUTH0_AUDIENCE}
       scope="all"
     >
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <WorkspaceProvider>
+        <UiProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </UiProvider>
+      </WorkspaceProvider>
     </Auth0Provider>
   </React.StrictMode>,
   document.getElementById('root')

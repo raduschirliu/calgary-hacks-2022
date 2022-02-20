@@ -2,7 +2,9 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { Link, Route, Routes } from 'react-router-dom';
 import LandingPage from '../pages/Landing';
 import DashboardPage from '../pages/Dashboard';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
+import { UiContext } from '../contexts/UiContext';
+import WorkspaceContext from '../contexts/WorkspaceContext';
 
 const AuthProtected = ({ component, ...rest }: any) => {
   const Page = withAuthenticationRequired(component, { returnTo: '/' });
@@ -12,6 +14,7 @@ const AuthProtected = ({ component, ...rest }: any) => {
 function App() {
   const { logout, loginWithPopup, isAuthenticated, getAccessTokenSilently } =
     useAuth0();
+  const { showSnackbar } = useContext(UiContext);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -31,6 +34,10 @@ function App() {
         login
       </button>
       <br />
+
+      <button onClick={() => showSnackbar({ open: true, message: 'test!!!' })}>
+        hello
+      </button>
       <button
         onClick={() => {
           logout();
