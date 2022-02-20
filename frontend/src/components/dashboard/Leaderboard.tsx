@@ -3,11 +3,11 @@ import IUser from '../../models/User';
 
 export default function Leaderboard({ users }: { users?: IUser[] }) {
   if (!users) {
-    return <p>LOADING</p>;
+    return null; 
   }
 
   return (
-    <div className="bg-sky-100">
+    <div className="w-100 bg-white rounded-md">
       <h1>Leaderboard</h1>
       <div>
         {users.map((user, index) => {

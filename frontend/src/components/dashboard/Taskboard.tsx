@@ -11,7 +11,7 @@ export default function Taskboard({
   users?: IUser[];
 }) {
   if (!tasks || !users) {
-    return <p>LOADING!</p>;
+    return null;
   }
 
   return (
