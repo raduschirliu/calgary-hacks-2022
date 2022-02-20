@@ -1,20 +1,46 @@
-import React from 'react';
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
+import { Link, Route, Routes } from 'react-router-dom';
+import LandingPage from '../pages/Landing';
+import DashboardPage from '../pages/Dashboard';
+
+const AuthProtected = ({ component, ...rest }: any) => {
+  const Page = withAuthenticationRequired(component, { returnTo: '/' });
+  return <Page {...rest} />;
+};
 
 function App() {
+  const { logout, loginWithPopup, isAuthenticated } = useAuth0();
+
+  console.log(isAuthenticated);
+
   return (
-    <div className="bg-gray-900 p-20 h-screen flex justify-center items-start flex-col">
-      <h1 className="text-5xl text-white">Hello Tailwind 👋</h1>
-      <p className="text-gray-400 mt-5 text-lg">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit
-        consequuntur odio aut nobis ab quis? Reiciendis doloremque ut quo fugiat
-        eveniet tempora, atque alias earum ullam inventore itaque sapiente iste?
-      </p>
+    <div>
       <button
-        onClick={() => console.log('Hello World')}
-        className="p-4 bg-lime-600 rounded-lg font-bold text-white mt-5 hover:bg-gray-600"
+        onClick={() => {
+          loginWithPopup();
+        }}
       >
-        Hello Friends 🚀
+        login
       </button>
+      <br />
+      <button
+        onClick={() => {
+          logout();
+        }}
+      >
+        Logout
+      </button>
+      <br />
+      <Link to="/dashboard">dash link</Link>
+      <br />
+      <br />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/dashboard"
+          element={<AuthProtected component={DashboardPage} />}
+        />
+      </Routes>
     </div>
   );
 }

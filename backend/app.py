@@ -9,8 +9,8 @@ from src import db
 # Load environment variables
 load_dotenv()
 
-from src import util
-util.example()
+from src import db
+db.create_tables()
 
 # Load DB tables
 
