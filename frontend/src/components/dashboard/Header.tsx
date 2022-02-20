@@ -29,7 +29,7 @@ export default function Header() {
       >
         <MenuItem
           onClick={() => {
-            logout();
+            logout({ returnTo: window.location.origin });
             setAnchorEl(null);
           }}
         >
