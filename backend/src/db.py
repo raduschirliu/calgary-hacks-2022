@@ -221,18 +221,29 @@ def get_workspace_users(workspace_id):
     return result
 
 def get_workspace_tasks(workspace_id):
+    def getId(user):
+        return user.id
+
     # return a list of all tasks {id, deadline, difficulty, name, category, workspace_id} in a workspace (from TASK)
     sql = "SELECT id FROM task WHERE workspace_id = %s"
     cursor.execute(sql, (workspace_id,))
     task_ids = cursor.fetchall()
-    sql = "SELECT * FROM task WHERE id = %s"
-    result = []
+    sql = "SELECT t.id, t.name, t.deadline, t.difficulty, t.category FROM task AS t WHERE id = %s"
+    tasks = []
     for row in task_ids:
         row = dict(row)
         cursor.execute(sql, (row["id"],))
-        user = cursor.fetchone()
-        result.append(user)
-    return result
+        task = cursor.fetchone()
+        tasks.append(task)
+    for task in tasks:
+        users = get_task_users(task.id)
+        user_ids = []
+        for user in users:
+            user_ids.append(user.id)
+        
+        task.completedBy = user_ids
+    
+    return tasks
 
 def post_task(deadline, difficulty, name, category, workspace_id):
     id = str(uuid.uuid4())
