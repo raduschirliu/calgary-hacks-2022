@@ -189,14 +189,15 @@ def get_workspaces(user_id):
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     sql = "SELECT workspace_id FROM workspace_user WHERE user_id = %s"
-    cursor.execute(sql, (user_id))
+    cursor.execute(sql, (user_id,))
     workspace_ids = cursor.fetchall()
     sql = "SELECT * FROM workspace WHERE id = %s"
     result = []
-    for workspace_id in workspace_ids:
-        cursor.execute(sql, (workspace_id))
-        workspace = cursor.fetchall()
-        result.add(workspace) 
+    for row in workspace_ids:
+        row = dict(row)
+        cursor.execute(sql, (row["workspace_id"],))
+        workspace = cursor.fetchone()
+        result.append(workspace)
     conn.close()
     return result
 
