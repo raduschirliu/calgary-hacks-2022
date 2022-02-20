@@ -1,10 +1,8 @@
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import LandingPage from '../pages/Landing';
 import DashboardPage from '../pages/Dashboard';
-import { useContext, useEffect } from 'react';
-import { UiContext } from '../contexts/UiContext';
-import WorkspaceContext from '../contexts/WorkspaceContext';
+import { useEffect } from 'react';
 
 const AuthProtected = ({ component, ...rest }: any) => {
   const Page = withAuthenticationRequired(component, { returnTo: '/' });
@@ -12,9 +10,7 @@ const AuthProtected = ({ component, ...rest }: any) => {
 };
 
 function App() {
-  const { logout, loginWithPopup, isAuthenticated, getAccessTokenSilently } =
-    useAuth0();
-  const { showSnackbar } = useContext(UiContext);
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -25,7 +21,7 @@ function App() {
   }, [isAuthenticated, getAccessTokenSilently]);
 
   return (
-    <div>
+    <div className="my-4 mx-12">
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route
