@@ -253,7 +253,7 @@ def post_task(deadline, difficulty, name, category, workspace_id):
         name,
         category,
         workspace_id
-        ) VALUES (%s, %s, %s, %s, %s, %s)
+        ) VALUES (%s, current_timestamp, %s, %s, %s, %s)
     """
     try:
         cursor.execute(sql, (id, deadline, difficulty, name, category, workspace_id))  
