@@ -233,12 +233,22 @@ def post_task(deadline, difficulty, name, category, workspace_id):
         return "Failed to post task."
 
 def get_task(task_id):
-    # return task from TASK
-    return "ok"
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    sql = "SELECT * FROM task WHERE task_id = %s"
+    cursor.execute(sql, (task_id,))
+    task = cursor.fetchone()
+    conn.close()
+    return task
 
 def get_num_times_completed(task_id):
-    # return # of times the task_id appears in USER_TASK
-    return "ok"
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    sql = "SELECT * FROM user_task WHERE task_id = %s"
+    cursor.execute(sql, (task_id,))
+    tasks = cursor.fetchall()
+    conn.close()
+    return len(tasks)
 
 def post_user_task(user_id, task_id):
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -262,4 +272,20 @@ def post_user_task(user_id, task_id):
 
 def put_points(workspace_id, user_id, points):
     # update row in WORKSPACE_USER by adding points to total score
-    return "ok"
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    # get current score
+    sql = "SELECT score FROM workspace_user WHERE workspace_id = %s AND user_id = %s"
+    cursor.execute(sql, (workspace_id, user_id))
+    score = cursor.fetchone()
+    # update score
+    sql = "UPDATE workspace_user SET score = %s WHERE workspace_id = %s AND user_id = %s"
+    new_score = score + points # might have to convert score into int
+    try:
+        cursor.execute(sql, (workspace_id, user_id, str(new_score)))
+        conn.commit()
+        conn.close()
+        return new_score
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        return "Error updating points"
