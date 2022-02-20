@@ -84,7 +84,21 @@ export default function WorkspaceProvider({ children }: { children: any }) {
   };
 
   // Invite a user to our current workspace (if valid)
-  const inviteToWorkspace = (email: string) => {};
+  const inviteToWorkspace = (email: string) => {
+    if (!currentWorkspace) {
+      return;
+    }
+
+    axios
+      .post(
+        `${API_URL}/workspace/${currentWorkspace.id}/invite`,
+        {
+          users: email,
+        },
+        getHeaders()
+      )
+      .catch(console.error);
+  };
 
   // Add a new task to our current workspace (if valid)
   const addTask = (task: ITask) => {
