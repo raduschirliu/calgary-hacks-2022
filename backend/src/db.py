@@ -238,7 +238,7 @@ def get_workspace_tasks(workspace_id):
         for user in users:
             user_ids.append(user["id"])
         
-        task.completedBy = user_ids
+        task["completedBy"] = user_ids
     
     return tasks
 
