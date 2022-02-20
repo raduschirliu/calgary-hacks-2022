@@ -12,7 +12,6 @@ conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 cursor = conn.cursor(cursor_factory=RealDictCursor)
 
-
 # single database table creation function
 
 def create_tables():
@@ -157,7 +156,6 @@ def post_workspace(name):
     try:
         cursor.execute(sql, (id, name))  
         conn.commit()
-        conn.close()
         return id
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -174,11 +172,26 @@ def post_workspace_user(workspace_id, user_id):
     try:
         cursor.execute(sql, (workspace_id, user_id, 0))  
         conn.commit()
-        conn.close()
         return "OK"
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         return "Failed to post workspace_user."
+
+def user_in_workspace(user_id, workspace_id):
+    sql = "SELECT * FROM workspace_user WHERE user_id = %s and workspace_id = %s"
+    cursor.execute(sql, (user_id, workspace_id))
+    result = cursor.fetchall()
+    if result == None or len(result) > 0:
+        return True
+    return False
+
+def get_user_id(email):
+    sql = "SELECT id FROM users WHERE email = %s"
+    cursor.execute(sql, (email,))
+    user_id = cursor.fetchone()
+    if user_id == None or len(user_id) == 0:
+        return None
+    return user_id
 
 def get_workspaces(user_id):
     # return a list of all workspaces {id, name} associated with a user (from WORKSPACE_USER)
@@ -192,7 +205,6 @@ def get_workspaces(user_id):
         cursor.execute(sql, (row["workspace_id"],))
         workspace = cursor.fetchone()
         result.append(workspace)
-    conn.close()
     return result
 
 def get_workspace_users(workspace_id):
@@ -207,7 +219,6 @@ def get_workspace_users(workspace_id):
         cursor.execute(sql, (row["user_id"],))
         user = cursor.fetchone()
         result.append(user)
-    conn.close()
     return result
 
 def get_workspace_tasks(workspace_id):
@@ -222,7 +233,6 @@ def get_workspace_tasks(workspace_id):
         cursor.execute(sql, (row["id"],))
         user = cursor.fetchone()
         result.append(user)
-    conn.close()
     return result
 
 def post_task(deadline, difficulty, name, category, workspace_id):
@@ -240,7 +250,6 @@ def post_task(deadline, difficulty, name, category, workspace_id):
     try:
         cursor.execute(sql, (id, deadline, difficulty, name, category, workspace_id))  
         conn.commit()
-        conn.close()
         return id
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -250,14 +259,12 @@ def get_task(task_id):
     sql = "SELECT * FROM task WHERE task_id = %s"
     cursor.execute(sql, (task_id,))
     task = cursor.fetchone()
-    conn.close()
     return task
 
 def get_num_times_completed(task_id):
     sql = "SELECT * FROM user_task WHERE task_id = %s"
     cursor.execute(sql, (task_id,))
     tasks = cursor.fetchall()
-    conn.close()
     return len(tasks)
 
 def post_user_task(user_id, task_id):
@@ -272,7 +279,6 @@ def post_user_task(user_id, task_id):
     try:
         cursor.execute(sql, (user_id, task_id, dt))  
         conn.commit()
-        conn.close()
         return id
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -290,7 +296,6 @@ def put_points(workspace_id, user_id, points):
     try:
         cursor.execute(sql, (workspace_id, user_id, str(new_score)))
         conn.commit()
-        conn.close()
         return new_score
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
