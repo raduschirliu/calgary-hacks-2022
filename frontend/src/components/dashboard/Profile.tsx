@@ -4,10 +4,9 @@ import { UserCircleIcon } from '@heroicons/react/solid';
 
 export default function Profile({ user }: { user: IUser }) {
   return (
-    <div className="text-right">
-      <span>
-        Hello {user.name} <UserCircleIcon className="w-5 h-5" />
-      </span>
+    <div className="flex flex-row-reverse">
+      <UserCircleIcon className="w-5 h-5" />
+      <div>Hello {user.name}</div>
     </div>
   );
 }
