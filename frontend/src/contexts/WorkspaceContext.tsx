@@ -101,6 +101,7 @@ export default function WorkspaceProvider({ children }: { children: any }) {
         getHeaders()
       )
       .then((res) => {
+        // Returns the id of the new task.
         if (!currentWorkspace) {
           return;
         }
@@ -124,7 +125,7 @@ export default function WorkspaceProvider({ children }: { children: any }) {
     axios
       .put(`${API_URL}/task/${task.id}`, {}, getHeaders())
       .then((res) => {
-        // returns an updated score for the active user
+        // Returns an updated score for the active user
         if (!currentWorkspace || !user?.sub) {
           return;
         }
@@ -138,7 +139,8 @@ export default function WorkspaceProvider({ children }: { children: any }) {
         const currentUser = currentWorkspace.users.find(
           (u) => u.id === user.sub
         );
-        // This is a sanity check for typescript, theoretically there is no way the user isn't in the current workspace's list of users.
+        // This is a sanity check for typescript:
+        // Theoretically there is no way the user isn't in the current workspace's list of users.
         if (!currentUser) {
           return;
         }
