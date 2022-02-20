@@ -3,17 +3,16 @@ import psycopg2
 import uuid
 import datetime
 import threading
+import atexit
 from psycopg2.extras import RealDictCursor
 
 # global variable of database url
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
 cursor = conn.cursor(cursor_factory=RealDictCursor)
 
 # single database table creation function
-
 def create_tables():
     lock = threading.Lock()
 
@@ -24,6 +23,19 @@ def create_tables():
         create_task_table()
         create_user_task_table()
         create_workspace_stat_table()
+
+        print("Initialized DB tables")
+
+# database connection cleanup
+def cleanup_db_conn():
+    lock = threading.Lock()
+
+    with lock:
+        cursor.close()
+        conn.close()
+        print("Closed DB connection")
+
+atexit.register(cleanup_db_conn)
 
 # functions for creating database tables
 
@@ -181,7 +193,7 @@ def user_in_workspace(user_id, workspace_id):
     sql = "SELECT * FROM workspace_user WHERE user_id = %s and workspace_id = %s"
     cursor.execute(sql, (user_id, workspace_id))
     result = cursor.fetchall()
-    if result == None or len(result) > 0:
+    if len(result) > 0:
         return True
     return False
 
@@ -191,7 +203,7 @@ def get_user_id(email):
     user_id = cursor.fetchone()
     if user_id == None or len(user_id) == 0:
         return None
-    return user_id
+    return user_id['id']
 
 def get_workspaces(user_id):
     # return a list of all workspaces {id, name} associated with a user (from WORKSPACE_USER)
@@ -212,7 +224,7 @@ def get_workspace_users(workspace_id):
     sql = "SELECT user_id FROM workspace_user WHERE workspace_id = %s"
     cursor.execute(sql, (workspace_id,))
     user_ids = cursor.fetchall()
-    sql = "SELECT * FROM user WHERE id = %s"
+    sql = "SELECT * FROM users WHERE id = %s"
     result = []
     for row in user_ids:
         row = dict(row)

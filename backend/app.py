@@ -42,7 +42,8 @@ def post_workspace():
     workspace_id = db.post_workspace(req['name'])
     # add calling user to the workspace
     user_id = jwt['sub']
-    return db.post_workspace_user(workspace_id, user_id)
+    db.post_workspace_user(workspace_id, user_id)
+    return workspace_id
 
 # Add users to workspace
 @app.route('/workspace/<workspace_id>/invite', methods=['POST'])
