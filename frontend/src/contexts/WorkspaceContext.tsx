@@ -179,7 +179,17 @@ export default function WorkspaceProvider({ children }: { children: any }) {
   // Update a task (if valid)
   const updateTask = (task: ITask) => {
     axios
-      .put(`${API_URL}/task/${task.id}`, {}, getHeaders())
+      .put(
+        `${API_URL}/task/${task.id}`,
+        {
+          deadline: task.deadline,
+          difficulty: task.difficulty,
+          name: task.name,
+          category: task.category,
+          workspace_id: currentWorkspace?.id,
+        },
+        getHeaders()
+      )
       .then((res) => {
         // Returns an updated score for the active user
         if (!currentWorkspace || !user?.sub) {

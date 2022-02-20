@@ -223,6 +223,7 @@ def get_workspace_users(workspace_id):
 def get_workspace_tasks(workspace_id):
     # return a list of all tasks {id, deadline, difficulty, name, category, workspace_id} in a workspace (from TASK)
     sql = "SELECT id FROM task WHERE workspace_id = %s"
+    print('ws id', workspace_id)
     cursor.execute(sql, (workspace_id,))
     task_ids = cursor.fetchall()
     sql = "SELECT t.id, t.name, t.deadline, t.difficulty, t.category FROM task AS t WHERE id = %s"
