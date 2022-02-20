@@ -1,7 +1,7 @@
 import os
 import psycopg2
 import uuid
-import datetime
+from datetime import datetime
 import threading
 import atexit
 from psycopg2.extras import RealDictCursor
@@ -112,7 +112,7 @@ def create_workspace_user_table():
 def create_user_task_table():
     sql = """
     CREATE TABLE IF NOT EXISTS user_task(
-        user_id varchar(255) NOT NULL ,
+        user_id varchar(255) NOT NULL,
         task_id varchar(255) NOT NULL,
         timestamp timestamp without time zone NOT NULL,
         
@@ -141,19 +141,6 @@ def create_workspace_stat_table():
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
-
-# workspace endpoints
-
-def get_workspace(workspace_id):
-    sql = "SELECT * FROM workspace WHERE workspace_id = %s"
-    cursor.execute(sql, (workspace_id))
-    return cursor.fetchall()
-
-
-def get_task(workspace_id):
-    sql = "SELECT * FROM workspace WHERE workspace_id = %s"
-    cursor.execute(sql, (workspace_id))
-    return cursor.fetchall()
 
 ## HELPER FUNCTIONS ##
 
@@ -224,11 +211,11 @@ def get_workspace_users(workspace_id):
     sql = "SELECT user_id FROM workspace_user WHERE workspace_id = %s"
     cursor.execute(sql, (workspace_id,))
     user_ids = cursor.fetchall()
-    sql = "SELECT * FROM users WHERE id = %s"
+    sql = "SELECT u.id, u.name, u.email, w.score FROM users AS u, workspace_user AS w WHERE u.id = %s AND u.id = w.user_id AND w.workspace_id = %s"
     result = []
     for row in user_ids:
         row = dict(row)
-        cursor.execute(sql, (row["user_id"],))
+        cursor.execute(sql, (row["user_id"], workspace_id))
         user = cursor.fetchone()
         result.append(user)
     return result
@@ -268,7 +255,7 @@ def post_task(deadline, difficulty, name, category, workspace_id):
         return "Failed to post task."
 
 def get_task(task_id):
-    sql = "SELECT * FROM task WHERE task_id = %s"
+    sql = "SELECT * FROM task WHERE id = %s"
     cursor.execute(sql, (task_id,))
     task = cursor.fetchone()
     return task
@@ -291,7 +278,7 @@ def post_user_task(user_id, task_id):
     try:
         cursor.execute(sql, (user_id, task_id, dt))  
         conn.commit()
-        return id
+        return "OK"
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         return "Failed to post user_task."
@@ -301,14 +288,27 @@ def put_points(workspace_id, user_id, points):
     # get current score
     sql = "SELECT score FROM workspace_user WHERE workspace_id = %s AND user_id = %s"
     cursor.execute(sql, (workspace_id, user_id))
-    score = cursor.fetchone()
+    score = cursor.fetchone()['score']
     # update score
     sql = "UPDATE workspace_user SET score = %s WHERE workspace_id = %s AND user_id = %s"
-    new_score = score + points # might have to convert score into int
+    new_score = int(score) + int(points) # might have to convert score into int
     try:
-        cursor.execute(sql, (workspace_id, user_id, str(new_score)))
+        cursor.execute(sql, (str(new_score), workspace_id, user_id))
         conn.commit()
         return new_score
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         return "Error updating points"
+
+def get_task_users(task_id):
+    sql = "SELECT user_id FROM user_task WHERE task_id = %s"
+    cursor.execute(sql, (task_id,))
+    user_ids = cursor.fetchall()
+    sql = "SELECT * FROM users WHERE id = %s"
+    result = []
+    for row in user_ids:
+        row = dict(row)
+        cursor.execute(sql, (row["user_id"],))
+        user = cursor.fetchone()
+        result.append(user)
+    return result
