@@ -76,7 +76,7 @@ export default function Taskboard({
       </div>
 
       <button
-        className="ml-2 p-2 hover:bg-amber-50 rounded transition-colors"
+        className="ml-2 p-2 hover:bg-peach rounded transition-colors"
         data-mdb-ripple="true"
         onClick={() => setModalOpen(true)}
       >
@@ -113,7 +113,7 @@ export default function Taskboard({
             <button
               type="submit"
               data-mdb-ripple="true"
-              className="mt-4 w-full py-2 rounded hover:bg-amber-50 transition duration-150 ease-in-out"
+              className="mt-4 w-full py-2 rounded hover:bg-peach transition duration-150 ease-in-out"
               value="Create"
             >
               Create

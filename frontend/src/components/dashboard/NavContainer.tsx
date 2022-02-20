@@ -64,7 +64,7 @@ export default function NavContainer() {
     <div className="container max-w-xs mr-6 p-2 flex flex-col bg-white shadow-sm rounded-md">
       {/* Create workspace button */}
       <button
-        className="my-1 mb-6 py-0.5 rounded hover:bg-amber-50 transition duration-150 ease-in-out"
+        className="my-1 mb-6 py-0.5 rounded hover:bg-peach transition duration-150 ease-in-out"
         data-mdb-ripple="true"
         onClick={() => setModalOpen(true)}
       >
@@ -77,11 +77,11 @@ export default function NavContainer() {
           <button
             key={`nav-${workspace.id}`}
             className={`
-              w-full my-1 py-0.5 rounded hover:bg-amber-50 transition duration-150 ease-in-out
+              w-full my-1 py-0.5 rounded hover:bg-peach transition duration-150 ease-in-out
               ${
                 // This breaks everything wtf
                 // currentWorkspace?.id === workspace.id
-                //   ? 'underline decoration-amber-50'
+                //   ? 'underline decoration-peach'
                 //   : ''
                 ''
               }
@@ -121,7 +121,7 @@ export default function NavContainer() {
             <button
               type="submit"
               data-mdb-ripple="true"
-              className="mt-4 w-full py-2 rounded hover:bg-amber-50 transition duration-150 ease-in-out"
+              className="mt-4 w-full py-2 rounded hover:bg-peach transition duration-150 ease-in-out"
               value="Create"
             >
               Create
