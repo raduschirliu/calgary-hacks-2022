@@ -2,48 +2,37 @@ import React, { useContext } from 'react';
 import { WorkspaceContext } from '../../contexts/WorkspaceContext';
 
 export default function NavContainer() {
-  //const { workspaces } = useContext(WorkspaceContext);
-
-  const workspaces = [
-    {
-      id: '1',
-      name: 'good workspace',
-    },
-    {
-      id: '2',
-      name: 'sexy workspace',
-    },
-  ];
+  const { workspaces, changeCurrentWorkspace, createWorkspace } =
+    useContext(WorkspaceContext);
 
   return (
-    <div className="container mx-auto px-4 col-span-1">
+    <div className="container max-w-xs mr-6 p-2 flex flex-col bg-white shadow-sm rounded-md">
       {/* Create workspace button */}
-      <div>
-        <button
-          className="my-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-2 rounded-full"
-          onClick={() => {
-            alert('Creating a workspace!');
-          }}
-        >
-          Create Workspace
-        </button>
-      </div>
+      <button
+        className="my-1 mb-6 py-0.5 rounded hover:bg-amber-50 transition-colors"
+        data-mdb-ripple="true"
+        onClick={() => {
+          alert('todo: create workspace');
+        }}
+      >
+        Create Workspace
+      </button>
+
       {/* Workspaces */}
-      <div>
-        {workspaces.map((workspace) => {
-          return (
-            <button
-              key={workspace.id}
-              className="my-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-2 rounded-full"
-              onClick={() => {
-                alert('setting workspace!');
-              }}
-            >
-              {workspace.name}
-            </button>
-          );
-        })}
-      </div>
+      {workspaces.map((workspace) => {
+        return (
+          <button
+            key={workspace.id}
+            className="w-full my-1 py-0.5 rounded hover:bg-amber-50 transition-colors"
+            data-mdb-ripple="true"
+            onClick={() => {
+              changeCurrentWorkspace(workspace.id);
+            }}
+          >
+            {workspace.name}
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -21,7 +21,7 @@ function App() {
   }, [isAuthenticated, getAccessTokenSilently]);
 
   return (
-    <div className="my-4 mx-12">
+    <div className="my-8 mx-24">
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route

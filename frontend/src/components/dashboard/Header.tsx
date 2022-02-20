@@ -3,7 +3,7 @@ import { UserCircleIcon } from '@heroicons/react/solid';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Button, Icon, IconButton, Menu, MenuItem } from '@mui/material';
 
-export default function Profile() {
+export default function Header() {
   const { user, logout } = useAuth0();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
@@ -14,7 +14,11 @@ export default function Profile() {
 
   return !!user ? (
     <div className="flex flex-row justify-end">
-      <button className="flex align-center" onClick={handleClick}>
+      <button
+        className="flex align-center leading-loose p-2 bg-white hover:bg-amber-50 shadow- rounded-md transition-colors"
+        data-mdb-ripple="true"
+        onClick={handleClick}
+      >
         <div>{user.given_name}</div>
         <UserCircleIcon className="ml-2 w-6 h-6 m-auto" />
       </button>

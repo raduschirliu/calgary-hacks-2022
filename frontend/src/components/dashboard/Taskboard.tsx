@@ -7,26 +7,25 @@ export default function Taskboard({
   tasks,
   users,
 }: {
-  tasks?: ITask[];
-  users?: IUser[];
+  tasks: ITask[];
+  users: IUser[];
 }) {
-  if (!tasks || !users) {
-    return <p>LOADING!</p>;
-  }
-
   return (
-    <div className="bg-red-100">
-      <h1>Taskboard</h1>
-      <div>
+    <div className="bg-white p-4 shadow-sm rounded-md">
+      <p className="font-medium">Taskboard</p>
+
+      <div className="ml-2">
         {tasks.map((task) => {
           return <TaskItem task={task} users={users} />;
         })}
       </div>
+
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-2 rounded-full"
+        className="ml-2 p-2 hover:bg-amber-50 rounded transition-colors"
+        data-mdb-ripple="true"
         onClick={() => alert('Adding a task!')}
       >
-        Add A Task
+        Add a Task
       </button>
     </div>
   );
