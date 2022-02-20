@@ -1,5 +1,5 @@
 import React from 'react';
-import IUser from '../models/User';
+import IUser from '../../models/User';
 
 export default function Leaderboard({ users }: { users: IUser[] }) {
   return (

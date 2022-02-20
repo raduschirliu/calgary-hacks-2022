@@ -1,7 +1,11 @@
+import NavContainer from '../components/dashboard/NavContainer';
+import WorkspaceContainer from '../components/dashboard/WorkspaceContainer';
+
 const DashboardPage = () => {
   return (
-    <div>
-      <p>hi this is a dashboard page and you need to be logged in to be here</p>
+    <div className="grid grid-cols-4">
+      <NavContainer />
+      <WorkspaceContainer />
     </div>
   );
 };

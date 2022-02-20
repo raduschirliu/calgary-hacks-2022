@@ -1,5 +1,5 @@
 import React from 'react';
-import ITask from '../models/Task';
+import ITask from '../../models/Task';
 import TaskItem from './TaskItem';
 
 export default function Taskboard({ tasks }: { tasks: ITask[] }) {
