@@ -24,7 +24,6 @@ m-0
 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
 `;
 
-
 interface IInviteForm {
   email: string;
 }
@@ -79,23 +78,27 @@ export default function Leaderboard({ users }: { users: IUser[] }) {
           const width = (user.score / maxScore) * 100;
 
           return (
-            <div key={user.id} className="grid grid-cols-2">
+            <div key={user.id} className="grid grid-cols-[250px_1fr]">
               <div className="flex flex-row">
                 {user.name}
                 {index === 0 ? (
-                  <AcademicCapIcon className="ml-2 m-auto text-peach w-5 h-5" />
+                  <AcademicCapIcon className="ml-4 m-auto text-peach w-5 h-5" />
                 ) : (
                   <></>
                 )}
               </div>
 
               <div className="w-full h-4 bg-gray-200 rounded-full">
-                <div
-                  className="bg-peach text-xs font-medium text-white text-center p-0.5 leading-none rounded-l-full"
-                  style={{ width: `${width}%` }}
-                >
-                  {user.score} / {maxScore}
-                </div>
+                {user.score > 0 ? (
+                  <div
+                    className="bg-peach text-xs font-medium text-white text-center p-0.5 leading-none rounded-full"
+                    style={{ width: `${width}%` }}
+                  >
+                    {user.score} / {maxScore}
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
           );
@@ -123,7 +126,7 @@ export default function Leaderboard({ users }: { users: IUser[] }) {
             {/* Name */}
             <div className="mb-4">
               <label htmlFor="name" className="form-label text-gray-600">
-                Name
+                Email
               </label>
               <input
                 className={inputClass}

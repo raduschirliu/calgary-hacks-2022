@@ -102,7 +102,16 @@ export default function WorkspaceProvider({ children }: { children: any }) {
           prev
             ? {
                 ...prev,
-                users: res.data as IUser[],
+                users: res.data.map((user: any) => {
+                  if (typeof user.score === 'string') {
+                    try {
+                      user.score = parseInt(user.score);
+                    } catch {
+                      console.error('why not number score', user);
+                    }
+                  }
+                  return user as IUser;
+                }),
               }
             : prev
         );
