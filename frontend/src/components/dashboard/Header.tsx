@@ -13,9 +13,9 @@ export default function Header() {
   };
 
   return !!user ? (
-    <div className="flex flex-row justify-end row-start-1 col-start-4">
+    <div className="flex flex-row justify-end">
       <button
-        className="p-2 flex align-center rounded-md bg-white hover:bg-amber-50 transition-colors"
+        className="flex align-center leading-loose p-2 bg-white hover:bg-amber-50 shadow- rounded-md transition-colors"
         data-mdb-ripple="true"
         onClick={handleClick}
       >

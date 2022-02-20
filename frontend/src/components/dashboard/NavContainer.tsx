@@ -6,7 +6,7 @@ export default function NavContainer() {
     useContext(WorkspaceContext);
 
   return (
-    <div className="container max-w-xs mr-6 p-2 flex flex-col bg-white rounded-md">
+    <div className="container max-w-xs mr-6 p-2 flex flex-col bg-white shadow-sm rounded-md">
       {/* Create workspace button */}
       <button
         className="my-1 mb-6 py-0.5 rounded hover:bg-amber-50 transition-colors"

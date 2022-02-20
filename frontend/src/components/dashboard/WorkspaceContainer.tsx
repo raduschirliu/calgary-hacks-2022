@@ -7,7 +7,7 @@ export default function WorkspaceContainer() {
   const { currentWorkspace } = useContext(WorkspaceContext);
 
   return currentWorkspace ? (
-    <div className="container mx-auto px-4 col-span-3">
+    <div className="container mx-auto">
       <Leaderboard users={currentWorkspace.users} />
       <Taskboard
         tasks={currentWorkspace.tasks}

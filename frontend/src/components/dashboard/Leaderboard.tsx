@@ -1,15 +1,12 @@
 import React from 'react';
 import IUser from '../../models/User';
 
-export default function Leaderboard({ users }: { users?: IUser[] }) {
-  if (!users) {
-    return null; 
-  }
-
+export default function Leaderboard({ users }: { users: IUser[] }) {
   return (
-    <div className="w-100 bg-white rounded-md">
-      <h1>Leaderboard</h1>
-      <div>
+    <div className="mb-4 p-4 bg-white shadow-sm rounded-md">
+      <p className="font-medium">Leaderboard</p>
+
+      <div className="ml-2">
         {users.map((user, index) => {
           return (
             <div key={index} className="grid grid-cols-2">
