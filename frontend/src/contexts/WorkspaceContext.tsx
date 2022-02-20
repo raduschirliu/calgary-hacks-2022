@@ -20,7 +20,7 @@ interface IWorkspaceContext {
 }
 
 const API_URL = process.env['REACT_APP_API_URL'] || 'localhost:8000';
-const WorkspaceContext = React.createContext<IWorkspaceContext>(null as any);
+export const WorkspaceContext = React.createContext<IWorkspaceContext>(null as any);
 
 export default function WorkspaceProvider({ children }: { children: any }) {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();

@@ -1,24 +1,15 @@
-import { Snackbar } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Snackbar, SnackbarProps } from '@mui/material';
+import React, { useState } from 'react';
 
 interface IUiContext {
-  showSnackbar: (config: ISnackbarConfig) => void;
+  showSnackbar: (config: SnackbarProps) => void;
 }
 
-interface ISnackbarConfig {
-  open: boolean;
-  message: string;
-  hideDuration?: number;
-  onClose?: () => void;
-  action?: () => void;
-}
-
-const UiContext = React.createContext<IUiContext>(null as any);
+export const UiContext = React.createContext<IUiContext>(null as any);
 
 export default function UiProvider({ children }: { children: any }) {
-  const [snackbarConfig, setSnackbarConfig] = useState<ISnackbarConfig>({
+  const [snackbarConfig, setSnackbarConfig] = useState<SnackbarProps>({
     open: false,
-    message: '',
   });
 
   return (
@@ -27,8 +18,9 @@ export default function UiProvider({ children }: { children: any }) {
         showSnackbar: setSnackbarConfig,
       }}
     >
-      <Snackbar />
+      <Snackbar {...snackbarConfig} />
       {children}
     </UiContext.Provider>
   );
 }
+
