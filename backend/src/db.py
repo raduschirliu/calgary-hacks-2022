@@ -3,17 +3,16 @@ import psycopg2
 import uuid
 import datetime
 import threading
+import atexit
 from psycopg2.extras import RealDictCursor
 
 # global variable of database url
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
 cursor = conn.cursor(cursor_factory=RealDictCursor)
 
 # single database table creation function
-
 def create_tables():
     lock = threading.Lock()
 
@@ -24,6 +23,19 @@ def create_tables():
         create_task_table()
         create_user_task_table()
         create_workspace_stat_table()
+
+        print("Initialized DB tables")
+
+# database connection cleanup
+def cleanup_db_conn():
+    lock = threading.Lock()
+
+    with lock:
+        cursor.close()
+        conn.close()
+        print("Closed DB connection")
+
+atexit.register(cleanup_db_conn)
 
 # functions for creating database tables
 
