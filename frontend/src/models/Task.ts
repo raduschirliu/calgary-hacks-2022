@@ -4,4 +4,5 @@ export default interface ITask {
   completedBy: string[];
   difficulty: number;
   category: string;
+  deadline: string;
 }
