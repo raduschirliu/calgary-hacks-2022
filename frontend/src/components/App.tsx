@@ -2,6 +2,7 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { Link, Route, Routes } from 'react-router-dom';
 import LandingPage from '../pages/Landing';
 import DashboardPage from '../pages/Dashboard';
+import { useEffect } from 'react';
 
 const AuthProtected = ({ component, ...rest }: any) => {
   const Page = withAuthenticationRequired(component, { returnTo: '/' });
@@ -9,9 +10,16 @@ const AuthProtected = ({ component, ...rest }: any) => {
 };
 
 function App() {
-  const { logout, loginWithPopup, isAuthenticated } = useAuth0();
+  const { logout, loginWithPopup, isAuthenticated, getAccessTokenSilently } =
+    useAuth0();
 
-  console.log(isAuthenticated);
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    getAccessTokenSilently().then((res) => {
+      console.log(res);
+    });
+  }, [isAuthenticated, getAccessTokenSilently]);
 
   return (
     <div>
