@@ -280,11 +280,12 @@ def post_user_task(user_id, task_id):
     sql = """
     INSERT INTO user_task (
         user_id,
-        task_id
-        ) VALUES (%s, %s)
+        task_id,
+        timestamp
+        ) VALUES (%s, %s, current_timestamp)
     """
     try:
-        cursor.execute(sql, (user_id, task_id))  
+        cursor.execute(sql, (user_id, task_id, dt))  
         conn.commit()
         return "OK"
     except (Exception, psycopg2.DatabaseError) as error:
