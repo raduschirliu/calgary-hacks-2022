@@ -10,7 +10,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
-cursor = conn.cursor()
+cursor = conn.cursor(cursor_factory=RealDictCursor)
 
 
 # single database table creation function
@@ -147,8 +147,6 @@ def get_task(workspace_id):
 ## HELPER FUNCTIONS ##
 
 def post_workspace(name):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     id = str(uuid.uuid4())
     sql = """
     INSERT INTO workspace (
@@ -166,8 +164,6 @@ def post_workspace(name):
         return "Failed to post workspace."
 
 def post_workspace_user(workspace_id, user_id):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     sql = """
     INSERT INTO workspace_user (
         workspace_id,
@@ -186,8 +182,6 @@ def post_workspace_user(workspace_id, user_id):
 
 def get_workspaces(user_id):
     # return a list of all workspaces {id, name} associated with a user (from WORKSPACE_USER)
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     sql = "SELECT workspace_id FROM workspace_user WHERE user_id = %s"
     cursor.execute(sql, (user_id,))
     workspace_ids = cursor.fetchall()
@@ -203,8 +197,6 @@ def get_workspaces(user_id):
 
 def get_workspace_users(workspace_id):
     # return a list of all users {id, name, email} in a workspace (from WORKSPACE_USER)
-    conn = psycop2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     sql = "SELECT user_id FROM workspace_user WHERE workspace_id = %s"
     cursor.execute(sql, (workspace_id,))
     user_ids = cursor.fetchall()
@@ -220,8 +212,6 @@ def get_workspace_users(workspace_id):
 
 def get_workspace_tasks(workspace_id):
     # return a list of all tasks {id, deadline, difficulty, name, category, workspace_id} in a workspace (from TASK)
-    conn = psycop2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     sql = "SELECT id FROM task WHERE workspace_id = %s"
     cursor.execute(sql, (workspace_id,))
     task_ids = cursor.fetchall()
@@ -236,8 +226,6 @@ def get_workspace_tasks(workspace_id):
     return result
 
 def post_task(deadline, difficulty, name, category, workspace_id):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     id = str(uuid.uuid4())
     sql = """
     INSERT INTO task (
@@ -259,8 +247,6 @@ def post_task(deadline, difficulty, name, category, workspace_id):
         return "Failed to post task."
 
 def get_task(task_id):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     sql = "SELECT * FROM task WHERE task_id = %s"
     cursor.execute(sql, (task_id,))
     task = cursor.fetchone()
@@ -268,8 +254,6 @@ def get_task(task_id):
     return task
 
 def get_num_times_completed(task_id):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     sql = "SELECT * FROM user_task WHERE task_id = %s"
     cursor.execute(sql, (task_id,))
     tasks = cursor.fetchall()
@@ -277,8 +261,6 @@ def get_num_times_completed(task_id):
     return len(tasks)
 
 def post_user_task(user_id, task_id):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     dt = datetime.now()
     sql = """
     INSERT INTO user_task (
@@ -298,8 +280,6 @@ def post_user_task(user_id, task_id):
 
 def put_points(workspace_id, user_id, points):
     # update row in WORKSPACE_USER by adding points to total score
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     # get current score
     sql = "SELECT score FROM workspace_user WHERE workspace_id = %s AND user_id = %s"
     cursor.execute(sql, (workspace_id, user_id))
