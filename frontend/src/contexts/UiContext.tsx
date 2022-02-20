@@ -7,15 +7,26 @@ interface IUiContext {
 
 interface ISnackbarConfig {
   open: boolean;
+  message: string;
+  hideDuration?: number;
+  onClose?: () => void;
+  action?: () => void;
 }
 
 const UiContext = React.createContext<IUiContext>(null as any);
 
 export default function UiProvider({ children }: { children: any }) {
-  const [snackbarConfig, setSnackbarConfig] = useState<ISnackbarConfig>({});
+  const [snackbarConfig, setSnackbarConfig] = useState<ISnackbarConfig>({
+    open: false,
+    message: '',
+  });
 
   return (
-    <UiContext.Provider value={{}}>
+    <UiContext.Provider
+      value={{
+        showSnackbar: setSnackbarConfig,
+      }}
+    >
       <Snackbar />
       {children}
     </UiContext.Provider>
