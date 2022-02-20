@@ -2,6 +2,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import ITask from '../models/Task';
+import IUser from '../models/User';
 import { IWorkspace, IWorkspacePreview } from '../models/Workspace';
 
 interface IWorkspaceContext {
@@ -24,7 +25,7 @@ export const WorkspaceContext = React.createContext<IWorkspaceContext>(
 );
 
 export default function WorkspaceProvider({ children }: { children: any }) {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   /**
    * State
@@ -83,13 +84,107 @@ export default function WorkspaceProvider({ children }: { children: any }) {
   };
 
   // Invite a user to our current workspace (if valid)
-  const inviteToWorkspace = (email: string) => {};
+  const inviteToWorkspace = (email: string) => {
+    if (!currentWorkspace) {
+      return;
+    }
+
+    axios
+      .post(
+        `${API_URL}/workspace/${currentWorkspace.id}/invite`,
+        {
+          users: email,
+        },
+        getHeaders()
+      )
+      .catch(console.error);
+  };
 
   // Add a new task to our current workspace (if valid)
-  const addTask = (task: ITask) => {};
+  const addTask = (task: ITask) => {
+    axios
+      .post(
+        `${API_URL}/task`,
+        {
+          deadline: task.deadline,
+          difficulty: task.difficulty,
+          name: task.name,
+          category: task.category,
+          workspaces_id: currentWorkspace?.id,
+        },
+        getHeaders()
+      )
+      .then((res) => {
+        // Returns the id of the new task.
+        if (!currentWorkspace) {
+          return;
+        }
+        // Set the id of the newly created task
+        const addedTask: ITask = {
+          ...task,
+          id: res.data,
+        };
+
+        const updatedCurrentWorkspace: IWorkspace = {
+          ...currentWorkspace,
+          tasks: [...currentWorkspace.tasks, addedTask],
+        };
+        setCurrentWorkspace(updatedCurrentWorkspace);
+      })
+      .catch(console.error);
+  };
 
   // Update a task (if valid)
-  const updateTask = (task: ITask) => {};
+  const updateTask = (task: ITask) => {
+    axios
+      .put(`${API_URL}/task/${task.id}`, {}, getHeaders())
+      .then((res) => {
+        // Returns an updated score for the active user
+        if (!currentWorkspace || !user?.sub) {
+          return;
+        }
+
+        // Update the task as complete, and update the user's score
+        const updatedTask: ITask = {
+          ...task,
+          completedBy: [...task.completedBy, user.sub],
+        };
+
+        const currentUser = currentWorkspace.users.find(
+          (u) => u.id === user.sub
+        );
+        // This is a sanity check for typescript:
+        // Theoretically there is no way the user isn't in the current workspace's list of users.
+        if (!currentUser) {
+          return;
+        }
+
+        const updatedUser: IUser = {
+          ...currentUser,
+          score: res.data,
+        };
+
+        const updatedCurrentWorkspace: IWorkspace = {
+          ...currentWorkspace,
+          tasks: currentWorkspace.tasks.map((t) => {
+            if (t.id === task.id) {
+              return updatedTask;
+            } else {
+              return t;
+            }
+          }),
+          users: currentWorkspace.users.map((u) => {
+            if (u.id === user.sub) {
+              return updatedUser;
+            } else {
+              return u;
+            }
+          }),
+        };
+        setCurrentWorkspace(updatedCurrentWorkspace);
+      })
+      .catch(console.error);
+  };
 
   /**
    * Effects

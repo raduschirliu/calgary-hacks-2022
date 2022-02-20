@@ -1,5 +1,4 @@
 import { Snackbar, SnackbarProps } from '@mui/material';
-import { unstable_createChainedFunction } from '@mui/utils';
 import React, { useState } from 'react';
 
 interface IUiContext {
