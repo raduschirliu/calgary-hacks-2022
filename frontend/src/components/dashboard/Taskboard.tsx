@@ -11,6 +11,12 @@ export default function Taskboard({ tasks }: { tasks: ITask[] }) {
           return <TaskItem task={task} />;
         })}
       </div>
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-2 rounded-full"
+        onClick={() => alert('Adding a task!')}
+      >
+        Add A Task
+      </button>
     </div>
   );
 }
