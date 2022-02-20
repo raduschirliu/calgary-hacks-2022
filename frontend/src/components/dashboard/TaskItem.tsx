@@ -51,6 +51,7 @@ export default function TaskItem({
         <button
           type="button"
           className="inline-block px-4 py-1 border-2 border-peach text-peach font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+          data-mdb-ripple="true"
           onClick={taskClicked}
         >
           Mark Done

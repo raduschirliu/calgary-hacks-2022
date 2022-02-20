@@ -134,7 +134,7 @@ export default function WorkspaceProvider({ children }: { children: any }) {
       .post(
         `${API_URL}/workspace/${currentWorkspace.id}/invite`,
         {
-          users: email,
+          users: [email],
         },
         getHeaders()
       )
