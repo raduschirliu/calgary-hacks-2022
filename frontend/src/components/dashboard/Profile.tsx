@@ -1,5 +1,6 @@
 import React from 'react';
+import IUser from '../../models/User';
 
-export default function Profile({ username }: { username: string }) {
-  return <div className="text-right">Hello {username}</div>;
+export default function Profile({ user }: { user: IUser }) {
+  return <div className="text-right">Hello {user.name}</div>;
 }

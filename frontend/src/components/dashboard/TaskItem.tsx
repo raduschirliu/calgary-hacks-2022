@@ -6,7 +6,7 @@ export default function TaskItem({ task }: { task: ITask }) {
     <>
       <div>{task.name}</div>
       <div>
-        {task.usersCompleted.map((user) => {
+        {task.completedBy.map((user) => {
           return <div key={user}>{user}</div>;
         })}
       </div>
