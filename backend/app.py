@@ -127,8 +127,21 @@ def put_task(task_id):
     task = db.get_task(task_id)
     # calc points
     scale_factor = 100 - min(db.get_num_times_completed(task_id), constants.MIN_PLACEMENT_FOR_BONUS)*10
-    points = scale_factor/100 * task['difficulty'] * constants.POINTS_PER_DIFFICULTY_LEVEL
+    difficulty = int(task['difficulty'])
+    points = scale_factor/100 * difficulty * constants.POINTS_PER_DIFFICULTY_LEVEL
     # update task complete time and user points
-    db.post_user_task(user_id, task_id)
+    if db.post_user_task(user_id, task_id) != "OK":
+        print("Failed to post user task.")
     workspace_id = task['workspace_id']   
-    return db.put_points(workspace_id, user_id, points)
+    return jsonify(db.put_points(workspace_id, user_id, points))
+
+# Get users who've completed a task
+@app.route('/task/<task_id>/users', methods=['GET'])
+@cross_origin()
+def get_task_users(task_id):
+    # auth
+    jwt = auth.verify_jwt()
+    if jwt == False:
+        return "Unauthorized", 401
+    # mark task as done and calc/add points
+    return jsonify(db.get_task_users(task_id))

@@ -26,29 +26,6 @@ function App() {
 
   return (
     <div>
-      <button
-        onClick={() => {
-          loginWithPopup();
-        }}
-      >
-        login
-      </button>
-      <br />
-
-      <button onClick={() => showSnackbar({ open: true, message: 'test!!!' })}>
-        hello
-      </button>
-      <button
-        onClick={() => {
-          logout();
-        }}
-      >
-        Logout
-      </button>
-      <br />
-      <Link to="/dashboard">dash link</Link>
-      <br />
-      <br />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route

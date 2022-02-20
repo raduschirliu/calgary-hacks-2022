@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ITask from '../models/Task';
 import IUser from '../models/User';
 import { IWorkspace, IWorkspacePreview } from '../models/Workspace';
@@ -8,7 +8,6 @@ import { IWorkspace, IWorkspacePreview } from '../models/Workspace';
 interface IWorkspaceContext {
   currentWorkspace: IWorkspace | null;
   workspaces: IWorkspacePreview[];
-  isLoading: boolean;
 
   // Maybe return a success status promise instead of void?
   createWorkspace: (name: string) => void;
@@ -31,47 +30,39 @@ export default function WorkspaceProvider({ children }: { children: any }) {
   /**
    * State
    */
-  const [jwt, setJwt] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string>('');
   const [currentWorkspace, setCurrentWorkspace] = useState<IWorkspace | null>(
     null
   );
   const [workspaces, setWorkspaces] = useState<IWorkspacePreview[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const baseHeader = {
-    Bearer: `Token ${jwt}`,
-  };
+  const getHeaders = useCallback(() => {
+    return { headers: { Authorization: `Bearer ${authToken}` } };
+  }, [authToken]);
 
   /**
    * Functions
    */
 
   // Update the list of workspace previews
-  const updateWorkspaceList = () => {
-    if (isLoading) return;
-    setIsLoading(true);
-
+  const updateWorkspaceList = useCallback(() => {
     axios
-      .get(`${API_URL}/workspace`, { headers: baseHeader })
+      .get(`${API_URL}/workspace`, getHeaders())
       .then((res) => {
         setWorkspaces(res.data as IWorkspacePreview[]);
       })
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
-  };
+      .catch(console.error);
+  }, [setWorkspaces, getHeaders]);
 
   // Create a new workspace
   const createWorkspace = (name: string) => {
-    if (isLoading) return;
-    setIsLoading(true);
-
     axios
       .post(
         `${API_URL}/workspace`,
         {
           name,
         },
-        { headers: baseHeader }
+        getHeaders()
       )
       .then((res) => {
         setWorkspaces((cur: IWorkspacePreview[]) => [
@@ -79,22 +70,17 @@ export default function WorkspaceProvider({ children }: { children: any }) {
           res.data as IWorkspacePreview,
         ]);
       })
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
+      .catch(console.error);
   };
 
   // Change the current workspace and load the new one
   const changeCurrentWorkspace = (id: string) => {
-    if (isLoading) return;
-    setIsLoading(true);
-
     axios
-      .get(`${API_URL}/workspace/${id}`, { headers: baseHeader })
+      .get(`${API_URL}/workspace/${id}`, getHeaders())
       .then((res) => {
         setCurrentWorkspace(res.data as IWorkspace);
       })
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
+      .catch(console.error);
   };
 
   // Invite a user to our current workspace (if valid)
@@ -102,9 +88,6 @@ export default function WorkspaceProvider({ children }: { children: any }) {
 
   // Add a new task to our current workspace (if valid)
   const addTask = (task: ITask) => {
-    if (isLoading) return;
-    setIsLoading(true);
-
     axios
       .post(
         `${API_URL}/task`,
@@ -115,7 +98,7 @@ export default function WorkspaceProvider({ children }: { children: any }) {
           category: task.category,
           workspaces_id: currentWorkspace?.id,
         },
-        { headers: baseHeader }
+        getHeaders()
       )
       .then((res) => {
         if (!currentWorkspace) {
@@ -133,17 +116,13 @@ export default function WorkspaceProvider({ children }: { children: any }) {
         };
         setCurrentWorkspace(updatedCurrentWorkspace);
       })
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
+      .catch(console.error);
   };
 
   // Update a task (if valid)
   const updateTask = (task: ITask) => {
-    if (isLoading || !isAuthenticated) return;
-    setIsLoading(true);
-
     axios
-      .put(`${API_URL}/task/${task.id}`, {}, { headers: baseHeader })
+      .put(`${API_URL}/task/${task.id}`, {}, getHeaders())
       .then((res) => {
         // returns an updated score for the active user
         if (!currentWorkspace || !user?.sub) {
@@ -188,8 +167,7 @@ export default function WorkspaceProvider({ children }: { children: any }) {
         };
         setCurrentWorkspace(updatedCurrentWorkspace);
       })
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
+      .catch(console.error);
   };
 
   /**
@@ -198,9 +176,10 @@ export default function WorkspaceProvider({ children }: { children: any }) {
 
   // Fetch workspaces on initial load
   useEffect(() => {
+    if (authToken.length === 0) return;
+    console.log('update workspace list');
     updateWorkspaceList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [authToken, updateWorkspaceList]);
 
   // Fetch JWT when it's updated
   useEffect(() => {
@@ -208,20 +187,19 @@ export default function WorkspaceProvider({ children }: { children: any }) {
 
     getAccessTokenSilently()
       .then((token: string) => {
-        setJwt(token);
+        setAuthToken(token);
       })
       .catch((err: any) => {
-        console.error('Failed to get JWT:');
+        console.error('Failed to get auth token:');
         console.error(err);
       });
-  }, [isAuthenticated, getAccessTokenSilently, setJwt]);
+  }, [isAuthenticated, getAccessTokenSilently, setAuthToken]);
 
   return (
     <WorkspaceContext.Provider
       value={{
         currentWorkspace,
         workspaces,
-        isLoading,
         createWorkspace,
         changeCurrentWorkspace,
         inviteToWorkspace,
