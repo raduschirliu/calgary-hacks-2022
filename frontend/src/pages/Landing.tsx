@@ -8,7 +8,7 @@ const LandingPage = () => {
   return (
     <div>
         <section className="mb-40 background-radial-gradient">
-          <nav className="navbar navbar-expand-lg shadow-md py-2 bg-white relative flex items-center w-full justify-between">
+          <nav className="navbar navbar-expand-lg rounded-md shadow-md py-2 bg-white relative flex items-center w-full justify-between">
             <div className="px-6 w-full flex flex-wrap items-center justify-between">
               <div className="flex items-center">
                 <button
@@ -55,7 +55,7 @@ const LandingPage = () => {
             </div>
           </nav>
 
-          <div className="px-6 py-12 md:px-12 text-center lg:text-left bg-white mt-3">
+          <div className="px-6 py-12 md:px-12 text-center lg:text-left bg-white rounded-md mt-3">
             <div className="container mx-auto xl:px-32">
               <div className="grid lg:grid-cols-2 gap-12 flex items-center">
                 <div className="mt-12 lg:mt-0">
