@@ -203,11 +203,37 @@ def get_workspaces(user_id):
 
 def get_workspace_users(workspace_id):
     # return a list of all users {id, name, email} in a workspace (from WORKSPACE_USER)
-    return "ok"
+    conn = psycop2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    sql = "SELECT user_id FROM workspace_user WHERE workspace_id = %s"
+    cursor.execute(sql, (workspace_id,))
+    user_ids = cursor.fetchall()
+    sql = "SELECT * FROM user WHERE id = %s"
+    result = []
+    for row in user_ids:
+        row = dict(row)
+        cursor.execute(sql, (row["user_id"],))
+        user = cursor.fetchone()
+        result.append(user)
+    conn.close()
+    return result
 
 def get_workspace_tasks(workspace_id):
     # return a list of all tasks {id, deadline, difficulty, name, category, workspace_id} in a workspace (from TASK)
-    return "ok"
+    conn = psycop2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    sql = "SELECT id FROM task WHERE workspace_id = %s"
+    cursor.execute(sql, (workspace_id,))
+    task_ids = cursor.fetchall()
+    sql = "SELECT * FROM task WHERE id = %s"
+    result = []
+    for row in task_ids:
+        row = dict(row)
+        cursor.execute(sql, (row["id"],))
+        user = cursor.fetchone()
+        result.append(user)
+    conn.close()
+    return result
 
 def post_task(deadline, difficulty, name, category, workspace_id):
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
