@@ -64,7 +64,7 @@ def post_invite(workspace_id):
 # Get a user's workspaces
 @app.route('/workspace', methods=['GET'])
 @cross_origin()
-def get_workspace():
+def get_workspaces():
     # auth
     jwt = auth.verify_jwt()
     if jwt == False:
@@ -76,7 +76,7 @@ def get_workspace():
 # Get users in a workspace
 @app.route('/workspace/<workspace_id>/users', methods=['GET'])
 @cross_origin()
-def get_workspace(workspace_id):
+def get_workspace_users(workspace_id):
     # auth
     jwt = auth.verify_jwt()
     if jwt == False:
@@ -88,7 +88,7 @@ def get_workspace(workspace_id):
 # Get tasks in a workspace
 @app.route('/workspace/<workspace_id>/tasks', methods=['GET'])
 @cross_origin()
-def get_workspace(workspace_id):
+def get_workspace_tasks(workspace_id):
     # auth
     jwt = auth.verify_jwt()
     if jwt == False:
