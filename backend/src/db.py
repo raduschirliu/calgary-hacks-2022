@@ -131,11 +131,48 @@ def get_task(workspace_id):
     cursor.execute(sql, (workspace_id))
     return cursor.fetchall()
 
+## HELPER FUNCTIONS ##
 
+def post_workspace(name):
+    # insert workspace
+    # return workspace_id
+    return "ok"
 
+def post_workspace_user(workspace_id, user_id):
+    # insert workspace,user into WORKSPACE_USER
+    # return "ok"
+    return "ok"
 
+def get_workspaces(user_id):
+    # return a list of all workspaces {id, name} associated with a user (from WORKSPACE_USER)
+    return "ok"
 
+def get_workspace_users(workspace_id):
+    # return a list of all users {id, name, email} in a workspace (from WORKSPACE_USER)
+    return "ok"
 
+def get_workspace_tasks(workspace_id):
+    # return a list of all tasks {id, deadline, difficulty, name, category, workspace_id} in a workspace (from TASK)
+    return "ok"
 
+def post_task(deadline, difficulty, name, category, workspace_id):
+    # insert new task into TASK
+    # return task id
+    return "ok"
 
+def get_task(task_id):
+    # return task from TASK
+    return "ok"
 
+def get_num_times_completed(task_id):
+    # return # of times the task_id appears in USER_TASK
+    return "ok"
+
+def post_user_task(user_id, task_id):
+    # insert into USER_TASK with timestamp=now
+    # return "ok"
+    return "ok"
+
+def put_points(workspace_id, user_id, points):
+    # update row in WORKSPACE_USER by adding points to total score
+    return "ok"
