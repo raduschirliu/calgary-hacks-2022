@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { WorkspaceContext } from '../../contexts/WorkspaceContext';
 import Leaderboard from './Leaderboard';
 import Profile from './Profile';
 import Taskboard from './Taskboard';
@@ -44,6 +45,8 @@ const sampleData = {
 };
 
 export default function WorkspaceContainer() {
+  const { currentWorkspace } = useContext(WorkspaceContext);
+
   return (
     <div className="container mx-auto px-4 col-span-3">
       <Profile user={sampleData.user} />
