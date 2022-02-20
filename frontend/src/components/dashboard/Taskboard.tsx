@@ -88,8 +88,9 @@ export default function Taskboard({
         <span className="font-medium">Taskboard</span>
         <button
           type="button"
-          className="inline-block text-peach ml-4 font-medium text-xs leading-tight rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+          className="inline-block text-peach ml-1 px-3 font-medium text-xs leading-tight rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
           data-bs-toggle="tooltip"
+          data-mdb-ripple="true"
           title="Add a new task"
           onClick={() => setModalOpen(true)}
         >

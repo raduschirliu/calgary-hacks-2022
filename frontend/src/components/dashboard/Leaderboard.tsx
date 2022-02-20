@@ -82,7 +82,7 @@ export default function Leaderboard({ users }: { users: IUser[] }) {
               <div className="flex flex-row">
                 {user.name}
                 {index === 0 ? (
-                  <AcademicCapIcon className="ml-2 m-auto text-peach w-5 h-5" />
+                  <AcademicCapIcon className="ml-4 m-auto text-peach w-5 h-5" />
                 ) : (
                   <></>
                 )}
@@ -126,7 +126,7 @@ export default function Leaderboard({ users }: { users: IUser[] }) {
             {/* Name */}
             <div className="mb-4">
               <label htmlFor="name" className="form-label text-gray-600">
-                Name
+                Email
               </label>
               <input
                 className={inputClass}
