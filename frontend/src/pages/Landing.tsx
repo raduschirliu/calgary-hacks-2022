@@ -49,7 +49,7 @@ const LandingPage = () => {
                 <div className="mb-12 lg:mb-0">
                   <img
                     src={Logo}
-                    className="w-full rounded-lg shadow-lg"
+                    className="w-full rounded-lg"
                     alt=""
                   />
                 </div>
