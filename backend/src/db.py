@@ -233,10 +233,10 @@ def get_workspace_tasks(workspace_id):
         task = cursor.fetchone()
         tasks.append(task)
     for task in tasks:
-        users = get_task_users(task.id)
+        users = get_task_users(task["id"])
         user_ids = []
         for user in users:
-            user_ids.append(user[id])
+            user_ids.append(user["id"])
         
         task.completedBy = user_ids
     
