@@ -54,11 +54,14 @@ def post_invite(workspace_id):
         return "Unauthorized", 401  
     # add each user to workspace
     req = request.json
-    users = req['users']
-    for user_id in users:
-        result = db.post_workspace_user(workspace_id, user_id)
-        if result != "OK":
-            return "Error"
+    user_emails = req['users']
+    for email in user_emails:
+        user_id = db.get_user_id(email)
+        if user_id != None and not db.user_in_workspace(user_id, workspace_id):
+            result = db.post_workspace_user(workspace_id, user_id)
+            if result != "OK":
+                return str("Error adding user: " + user_id)
+            print(str("Added user with email: " + email))
     return "OK"
 
 # Get a user's workspaces
