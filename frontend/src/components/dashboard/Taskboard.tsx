@@ -159,6 +159,7 @@ export default function Taskboard({
                   p-0
                   bg-transparent
                   focus:outline-none focus:ring-0 focus:shadow-none
+                  text-peach
                 "
                 min={0}
                 max={5}
