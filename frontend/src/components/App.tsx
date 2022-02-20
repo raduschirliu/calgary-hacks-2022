@@ -21,14 +21,16 @@ function App() {
   }, [isAuthenticated, getAccessTokenSilently]);
 
   return (
-    <div className="my-8 mx-24">
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route
-          path="/dashboard"
-          element={<AuthProtected component={DashboardPage} />}
-        />
-      </Routes>
+    <div className="h-screen w-screen bg-off-white">
+      <div className="py-8 px-24">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route
+            path="/dashboard"
+            element={<AuthProtected component={DashboardPage} />}
+          />
+        </Routes>
+      </div>
     </div>
   );
 }
