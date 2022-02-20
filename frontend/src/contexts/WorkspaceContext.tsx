@@ -75,10 +75,46 @@ export default function WorkspaceProvider({ children }: { children: any }) {
 
   // Change the current workspace and load the new one
   const changeCurrentWorkspace = (id: string) => {
+    // First we need to get the new workspace's name.
+    const newWorkspace = workspaces.find((w) => w.id === id);
+    if (!newWorkspace) {
+      // If this fails, we should abort the operation entirely.
+      return;
+    }
+
+    setCurrentWorkspace({
+      id: newWorkspace.id,
+      name: newWorkspace.name,
+      tasks: [],
+      users: [],
+    });
+
+    // Now we need to update the new workspace's task list and user list independently.
     axios
-      .get(`${API_URL}/workspace/${id}`, getHeaders())
+      .get(`${API_URL}/workspace/${id}/users`, getHeaders())
       .then((res) => {
-        setCurrentWorkspace(res.data as IWorkspace);
+        if (!currentWorkspace) {
+          return;
+        }
+
+        setCurrentWorkspace({
+          ...currentWorkspace,
+          users: res.data as IUser[],
+        });
+      })
+      .catch(console.error);
+
+    axios
+      .get(`${API_URL}/workspace/${id}/tasks`, getHeaders())
+      .then((res) => {
+        if (!currentWorkspace) {
+          return;
+        }
+
+        setCurrentWorkspace({
+          ...currentWorkspace,
+          tasks: res.data as ITask[],
+        });
       })
       .catch(console.error);
   };
