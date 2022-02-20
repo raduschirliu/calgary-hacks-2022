@@ -2,31 +2,33 @@ import { Dialog, DialogTitle, Modal } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { UiContext } from '../../contexts/UiContext';
+import { WorkspaceContext } from '../../contexts/WorkspaceContext';
 import ITask from '../../models/Task';
 import IUser from '../../models/User';
 import TaskItem from './TaskItem';
 
 const inputClass = `
-  form-control
-  block
-  w-full
-  px-3
-  py-1.5
-  text-base
-  font-normal
-  text-gray-700
-  bg-white bg-clip-padding
-  border border-solid border-gray-300
-  rounded
-  transition
-  ease-in-out
-  m-0
-  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
+form-control
+block
+w-full
+px-3
+py-1.5
+text-base
+font-normal
+text-gray-700
+bg-white bg-clip-padding
+border border-solid border-gray-300
+rounded
+transition
+ease-in-out
+m-0
+focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
 `;
 
 interface IAddTaskForm {
   name: string;
-  description?: string;
+  difficulty: number;
+  category?: string;
 }
 
 export default function Taskboard({
@@ -37,17 +39,31 @@ export default function Taskboard({
   users: IUser[];
 }) {
   const { showSnackbar } = useContext(UiContext);
+  const { addTask } = useContext(WorkspaceContext);
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
-  } = useForm<IAddTaskForm>();
+  } = useForm<IAddTaskForm>({
+    defaultValues: {
+      name: '',
+      difficulty: 3,
+    },
+  });
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const formDifficulty = watch(['difficulty']);
 
   const submitForm = (data: IAddTaskForm) => {
-    console.log('submitted');
-    console.log(data);
+    addTask({
+      id: '',
+      name: data.name,
+      category: data.category || '',
+      difficulty: data.difficulty,
+      deadline: '',
+      completedBy: [],
+    });
 
     showSnackbar({
       autoHideDuration: 2500,
@@ -56,7 +72,7 @@ export default function Taskboard({
           className="bg-green-100 rounded-lg py-5 px-6 mb-3 text-base text-green-700 inline-flex items-center w-full"
           role="alert"
         >
-          Created a new task: '{data.name}'!
+          Created a new task: '{data.name}'
         </div>
       ),
     });
@@ -89,26 +105,64 @@ export default function Taskboard({
         fullWidth={true}
       >
         <div className="py-6 px-16 w-full bg-white rounded">
-          <p className="font-medium font-lg mb-4">Add a Task</p>
+          <p className="font-normal font-lg mb-6">Add a Task</p>
 
           <form onSubmit={handleSubmit(submitForm)}>
-            <input
-              className={inputClass}
-              type="text"
-              placeholder="Name"
-              {...register('name', { required: true })}
-            />
-            {errors.name && (
-              <span className="text-sm font-light text-red-400">
-                Name is required
-              </span>
-            )}
+            {/* Name */}
+            <div className="mb-4">
+              <label htmlFor="name" className="form-label text-gray-600">
+                Name
+              </label>
+              <input
+                className={inputClass}
+                id="name"
+                type="text"
+                {...register('name', { required: true })}
+              />
+              {errors.name && (
+                <span className="text-sm font-light text-red-400">
+                  Name is required
+                </span>
+              )}
+            </div>
 
-            <textarea
-              className={`${inputClass} mt-4`}
-              placeholder="Description"
-              {...register('description')}
-            />
+            {/* Category */}
+            <div className="mb-4">
+              <label htmlFor="category" className="form-label text-gray-600">
+                Category{' '}
+                <span className="text-light text-gray-300">- optional</span>
+              </label>
+              <input
+                className={inputClass}
+                id="category"
+                type="text"
+                {...register('category')}
+              />
+            </div>
+
+            {/* Difficulty */}
+            <div className="relative pt-1">
+              <label htmlFor="difficulty" className="form-label">
+                Difficulty: {formDifficulty} / 5
+              </label>
+              <input
+                type="range"
+                className="
+                  form-range
+                  appearance-none
+                  w-full
+                  h-6
+                  p-0
+                  bg-transparent
+                  focus:outline-none focus:ring-0 focus:shadow-none
+                "
+                min={0}
+                max={5}
+                step="1"
+                id="difficulty"
+                {...register('difficulty', { required: true })}
+              />
+            </div>
 
             <button
               type="submit"

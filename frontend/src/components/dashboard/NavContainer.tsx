@@ -52,7 +52,7 @@ export default function NavContainer() {
           className="bg-green-100 rounded-lg py-5 px-6 mb-3 text-base text-green-700 inline-flex items-center w-full"
           role="alert"
         >
-          Created new workspace '{data.name}'!
+          Created new workspace '{data.name}'
         </div>
       ),
     });

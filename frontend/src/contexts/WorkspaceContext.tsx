@@ -143,6 +143,7 @@ export default function WorkspaceProvider({ children }: { children: any }) {
 
   // Add a new task to our current workspace (if valid)
   const addTask = (task: ITask) => {
+    console.log('current ws', currentWorkspace);
     axios
       .post(
         `${API_URL}/task`,
@@ -151,7 +152,7 @@ export default function WorkspaceProvider({ children }: { children: any }) {
           difficulty: task.difficulty,
           name: task.name,
           category: task.category,
-          workspaces_id: currentWorkspace?.id,
+          workspace_id: currentWorkspace?.id,
         },
         getHeaders()
       )
