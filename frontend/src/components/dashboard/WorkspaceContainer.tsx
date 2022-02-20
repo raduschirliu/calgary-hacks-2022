@@ -29,14 +29,14 @@ const sampleData = {
     {
       id: '1',
       name: 'Do a thing',
-      completedBy: ['Radu'],
+      completedBy: ['2', '3'],
       difficulty: 5,
       category: 'hard things',
     },
     {
       id: '2',
       name: 'Do an awesome thing',
-      completedBy: [],
+      completedBy: ['3'],
       difficulty: 1,
       category: 'easy things',
     },
