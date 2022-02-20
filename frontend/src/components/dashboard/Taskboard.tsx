@@ -7,9 +7,13 @@ export default function Taskboard({
   tasks,
   users,
 }: {
-  tasks: ITask[];
-  users: IUser[];
+  tasks?: ITask[];
+  users?: IUser[];
 }) {
+  if (!tasks || !users) {
+    return <p>LOADING!</p>;
+  }
+
   return (
     <div className="bg-red-100">
       <h1>Taskboard</h1>

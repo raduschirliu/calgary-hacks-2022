@@ -1,7 +1,11 @@
 import React from 'react';
 import IUser from '../../models/User';
 
-export default function Leaderboard({ users }: { users: IUser[] }) {
+export default function Leaderboard({ users }: { users?: IUser[] }) {
+  if (!users) {
+    return <p>LOADING</p>;
+  }
+
   return (
     <div className="bg-sky-100">
       <h1>Leaderboard</h1>

@@ -1,4 +1,5 @@
 import { Snackbar, SnackbarProps } from '@mui/material';
+import { unstable_createChainedFunction } from '@mui/utils';
 import React, { useState } from 'react';
 
 interface IUiContext {
@@ -8,19 +9,28 @@ interface IUiContext {
 export const UiContext = React.createContext<IUiContext>(null as any);
 
 export default function UiProvider({ children }: { children: any }) {
-  const [snackbarConfig, setSnackbarConfig] = useState<SnackbarProps>({
-    open: false,
-  });
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [snackbarConfig, setSnackbarConfig] = useState<SnackbarProps>({});
+
+  const showSnackbar = (props: SnackbarProps) => {
+    setSnackbarConfig(props);
+    setSnackbarOpen(true);
+  };
 
   return (
     <UiContext.Provider
       value={{
-        showSnackbar: setSnackbarConfig,
+        showSnackbar,
       }}
     >
-      <Snackbar {...snackbarConfig} />
+      <Snackbar
+        {...snackbarConfig}
+        open={snackbarOpen}
+        onClose={() => {
+          setSnackbarOpen(false);
+        }}
+      />
       {children}
     </UiContext.Provider>
   );
 }
-

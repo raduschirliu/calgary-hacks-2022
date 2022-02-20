@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ITask from '../models/Task';
 import { IWorkspace, IWorkspacePreview } from '../models/Workspace';
 
@@ -20,7 +20,9 @@ interface IWorkspaceContext {
 }
 
 const API_URL = process.env['REACT_APP_API_URL'] || 'localhost:8000';
-export const WorkspaceContext = React.createContext<IWorkspaceContext>(null as any);
+export const WorkspaceContext = React.createContext<IWorkspaceContext>(
+  null as any
+);
 
 export default function WorkspaceProvider({ children }: { children: any }) {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -28,34 +30,34 @@ export default function WorkspaceProvider({ children }: { children: any }) {
   /**
    * State
    */
-  const [jwt, setJwt] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string>('');
   const [currentWorkspace, setCurrentWorkspace] = useState<IWorkspace | null>(
     null
   );
   const [workspaces, setWorkspaces] = useState<IWorkspacePreview[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const baseHeader = {
-    Bearer: `Token ${jwt}`,
-  };
+  const getHeaders = useCallback(() => {
+    return { headers: { Authorization: `Bearer ${authToken}` } };
+  }, [authToken]);
 
   /**
    * Functions
    */
 
   // Update the list of workspace previews
-  const updateWorkspaceList = () => {
+  const updateWorkspaceList = useCallback(() => {
     if (isLoading) return;
     setIsLoading(true);
 
     axios
-      .get(`${API_URL}/workspace`, { headers: baseHeader })
+      .get(`${API_URL}/workspace`, getHeaders())
       .then((res) => {
         setWorkspaces(res.data as IWorkspacePreview[]);
       })
       .catch(console.error)
       .finally(() => setIsLoading(false));
-  };
+  }, [isLoading, setWorkspaces, getHeaders]);
 
   // Create a new workspace
   const createWorkspace = (name: string) => {
@@ -68,7 +70,7 @@ export default function WorkspaceProvider({ children }: { children: any }) {
         {
           name,
         },
-        { headers: baseHeader }
+        getHeaders()
       )
       .then((res) => {
         setWorkspaces((cur: IWorkspacePreview[]) => [
@@ -86,7 +88,7 @@ export default function WorkspaceProvider({ children }: { children: any }) {
     setIsLoading(true);
 
     axios
-      .get(`${API_URL}/workspace/${id}`, { headers: baseHeader })
+      .get(`${API_URL}/workspace/${id}`, getHeaders())
       .then((res) => {
         setCurrentWorkspace(res.data as IWorkspace);
       })
@@ -109,8 +111,9 @@ export default function WorkspaceProvider({ children }: { children: any }) {
 
   // Fetch workspaces on initial load
   useEffect(() => {
+    if (authToken.length === 0) return;
     updateWorkspaceList();
-  }, []);
+  }, [authToken, updateWorkspaceList]);
 
   // Fetch JWT when it's updated
   useEffect(() => {
@@ -118,13 +121,13 @@ export default function WorkspaceProvider({ children }: { children: any }) {
 
     getAccessTokenSilently()
       .then((token: string) => {
-        setJwt(token);
+        setAuthToken(token);
       })
       .catch((err: any) => {
-        console.error('Failed to get JWT:');
+        console.error('Failed to get auth token:');
         console.error(err);
       });
-  }, [isAuthenticated, getAccessTokenSilently, setJwt]);
+  }, [isAuthenticated, getAccessTokenSilently, setAuthToken]);
 
   return (
     <WorkspaceContext.Provider
