@@ -29,14 +29,14 @@ const sampleData = {
     {
       id: '1',
       name: 'Do a thing',
-      completedBy: ['2', '3'],
+      completedBy: ['1', '2'],
       difficulty: 5,
       category: 'hard things',
     },
     {
       id: '2',
       name: 'Do an awesome thing',
-      completedBy: ['3'],
+      completedBy: ['2'],
       difficulty: 1,
       category: 'easy things',
     },
@@ -48,7 +48,7 @@ export default function WorkspaceContainer() {
     <div className="container mx-auto px-4 col-span-3">
       <Profile user={sampleData.user} />
       <Leaderboard users={sampleData.users} />
-      <Taskboard tasks={sampleData.tasks} />
+      <Taskboard tasks={sampleData.tasks} users={sampleData.users} />
     </div>
   );
 }
