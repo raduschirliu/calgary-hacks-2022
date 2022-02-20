@@ -1,4 +1,7 @@
 export default interface ITask {
+  id: string;
   name: string;
-  usersCompleted: string[];
+  completedBy: string[];
+  difficulty: number;
+  category: string;
 }
