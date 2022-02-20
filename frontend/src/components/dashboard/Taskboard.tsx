@@ -1,14 +1,21 @@
 import React from 'react';
 import ITask from '../../models/Task';
+import IUser from '../../models/User';
 import TaskItem from './TaskItem';
 
-export default function Taskboard({ tasks }: { tasks: ITask[] }) {
+export default function Taskboard({
+  tasks,
+  users,
+}: {
+  tasks: ITask[];
+  users: IUser[];
+}) {
   return (
     <div className="bg-red-100">
       <h1>Taskboard</h1>
       <div>
         {tasks.map((task) => {
-          return <TaskItem task={task} />;
+          return <TaskItem task={task} users={users} />;
         })}
       </div>
       <button
