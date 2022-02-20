@@ -3,13 +3,11 @@ import re
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
-from src import constants
-from src import db
+from src import constants, auth, db
 
 # Load environment variables
 load_dotenv()
 
-from src import db
 db.create_tables()
 
 # Load DB tables
