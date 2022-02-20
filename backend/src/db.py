@@ -256,7 +256,7 @@ def post_task(deadline, difficulty, name, category, workspace_id):
         ) VALUES (%s, current_timestamp, %s, %s, %s, %s)
     """
     try:
-        cursor.execute(sql, (id, deadline, difficulty, name, category, workspace_id))  
+        cursor.execute(sql, (id, difficulty, name, category, workspace_id))  
         conn.commit()
         return id
     except (Exception, psycopg2.DatabaseError) as error:
@@ -285,7 +285,7 @@ def post_user_task(user_id, task_id):
         ) VALUES (%s, %s, current_timestamp)
     """
     try:
-        cursor.execute(sql, (user_id, task_id, dt))  
+        cursor.execute(sql, (user_id, task_id))  
         conn.commit()
         return "OK"
     except (Exception, psycopg2.DatabaseError) as error:
