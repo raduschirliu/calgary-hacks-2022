@@ -15,8 +15,8 @@ export default function WorkspaceContainer() {
       />
     </div>
   ) : (
-    <div className="w-full mx-auto bg-white rounded-md">
-      <p>Please select or create a new workspace</p>
+    <div className="w-full mx-auto p-4 bg-white rounded-md">
+      <p className="text-center">Please select or create a new workspace</p>
     </div>
   );
 }
