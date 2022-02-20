@@ -62,15 +62,6 @@ export default function NavContainer() {
 
   return (
     <div className="container max-w-xs mr-6 p-2 flex flex-col bg-white shadow-sm rounded-md">
-      {/* Create workspace button */}
-      <button
-        className="my-1 mb-6 py-0.5 rounded hover:bg-peach transition duration-150 ease-in-out"
-        data-mdb-ripple="true"
-        onClick={() => setModalOpen(true)}
-      >
-        Create Workspace
-      </button>
-
       {/* Workspaces */}
       {workspaces.map((workspace) => {
         return (
@@ -79,14 +70,12 @@ export default function NavContainer() {
             className={`
               w-full my-1 py-0.5 rounded hover:bg-peach transition duration-150 ease-in-out
               ${
-                // This breaks everything wtf
-                // currentWorkspace?.id === workspace.id
-                //   ? 'underline decoration-peach'
-                //   : ''
-                ''
+                currentWorkspace?.id === workspace.id
+                  ? 'underline decoration-peach'
+                  : ''
               }
             `}
-            data-mdb-ripple="true"
+            // data-mdb-ripple="true"
             onClick={() => {
               changeCurrentWorkspace(workspace.id);
             }}
@@ -95,6 +84,17 @@ export default function NavContainer() {
           </button>
         );
       })}
+
+      {/* Create workspace button */}
+      <button
+        className="inline-block px-4 py-1 border-2 border-peach text-peach font-medium text-xs
+        leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none
+        focus:ring-0 transition duration-150 ease-in-out mt-6"
+        data-mdb-ripple="true"
+        onClick={() => setModalOpen(true)}
+      >
+        Create Workspace
+      </button>
 
       {/* Create workspace dialog */}
       <Dialog

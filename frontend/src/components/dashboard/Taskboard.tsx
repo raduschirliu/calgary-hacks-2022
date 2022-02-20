@@ -6,6 +6,7 @@ import { WorkspaceContext } from '../../contexts/WorkspaceContext';
 import ITask from '../../models/Task';
 import IUser from '../../models/User';
 import TaskItem from './TaskItem';
+import { DocumentAddIcon } from '@heroicons/react/outline';
 
 const inputClass = `
 form-control
@@ -83,21 +84,24 @@ export default function Taskboard({
 
   return (
     <div className="bg-white p-4 shadow-sm rounded-md">
-      <p className="font-medium">Taskboard</p>
+      <div className="flex flex-row">
+        <span className="font-medium">Taskboard</span>
+        <button
+          type="button"
+          className="inline-block text-peach ml-4 font-medium text-xs leading-tight rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+          data-bs-toggle="tooltip"
+          title="Add a new task"
+          onClick={() => setModalOpen(true)}
+        >
+          <DocumentAddIcon className="m-auto text-peach w-5 h-5" />
+        </button>
+      </div>
 
       <div className="ml-2 my-2">
         {tasks.map((task) => {
           return <TaskItem key={task.id} task={task} users={users} />;
         })}
       </div>
-
-      <button
-        className="ml-2 p-2 hover:bg-peach rounded transition-colors"
-        data-mdb-ripple="true"
-        onClick={() => setModalOpen(true)}
-      >
-        Add a Task
-      </button>
 
       <Dialog
         open={modalOpen}
