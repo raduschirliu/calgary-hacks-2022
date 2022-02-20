@@ -16,6 +16,7 @@ export default function TaskItem({
       if (userName) {
         names.push(userName);
       }
+      return null;
     });
     return names.join(', ');
   }
